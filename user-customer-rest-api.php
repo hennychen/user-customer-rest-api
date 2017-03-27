@@ -22,6 +22,62 @@ class User_Custom_REST_API_Endpoints extends WP_REST_Controller {
 			'callback' => array( 'User_Custom_REST_API_Endpoints', 'create_userdata' ),
 
 		) );
+		register_rest_route( 'customapi/v1', '/getusercomments', array(
+			'methods' => 'GET',
+			'callback' => array( 'User_Custom_REST_API_Endpoints', 'getusercomments' ),
+
+		) );
+	}
+	public static  function  getusercomments( $request_data ){
+		$parameters = $request_data->get_params();
+//		$args = array(
+//			'author_email' => '',
+//			'author__in' => '',
+//			'author__not_in' => '',
+//			'include_unapproved' => '',
+//			'fields' => '',
+//			'ID' => '',
+//			'comment__in' => '',
+//			'comment__not_in' => '',
+//			'karma' => '',
+//			'number' => '',
+//			'offset' => '',
+//			'orderby' => '',
+//			'order' => 'DESC',
+//			'parent' => '',
+//			'post_author__in' => '',
+//			'post_author__not_in' => '',
+//			'post_ID' => '', // ignored (use post_id instead)
+//			'post_id' => 0,
+//			'post__in' => '',
+//			'post__not_in' => '',
+//			'post_author' => '',
+//			'post_name' => '',
+//			'post_parent' => '',
+//			'post_status' => '',
+//			'post_type' => '',
+//			'status' => 'all',
+//			'type' => '',
+//			'type__in' => '',
+//			'type__not_in' => '',
+//			'user_id' => '',
+//			'search' => '',
+//			'count' => false,
+//			'meta_key' => '',
+//			'meta_value' => '',
+//			'meta_query' => '',
+//			'date_query' => null, // See WP_Date_Query
+//		);
+		$comments = get_comments( $parameters );
+		foreach($comments as $comment) {
+//			echo($comment->comment_author);
+
+			$postdata = get_post($comment->comment_post_ID);
+			$comment->comment_post = $postdata;
+		}
+
+
+		return new WP_REST_Response($comments,200);
 	}
 	/**
 	 * Add a new user
